@@ -1,9 +1,15 @@
-$color: firebrick;
+@import 'variables';
+@import 'reset';
+@import 'mixins';
 
-body {
-    color: white;
-    background: $color;
-    height: 400vh;
-}
+@import 'typography';
+@import 'buttons';
 
-@import 'test.scss';
+@import 'pages/site-header';
+@import 'pages/site-footer';
+
+@import 'pages/navigation';
+@import 'pages/modal';
+
+@import 'transitions';
+@import 'animations';
