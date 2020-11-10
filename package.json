@@ -1,7 +1,7 @@
 {
     "name": "gulp-template",
     "version": "1.0.0",
-    "description": "lite gulp template for quick tasks",
+    "description": "gulp template",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,16 +9,18 @@
     "author": "Lyubosumaz",
     "license": "MIT",
     "devDependencies": {
-        "browser-sync": "^2.26.13",
         "gulp": "^4.0.2",
+        "browser-sync": "^2.26.13",
+        "del": "^6.0.0",
         "gulp-autoprefixer": "^7.0.1",
-        "gulp-changed": "^4.0.2",
-        "gulp-clean-css": "^4.3.0",
         "gulp-concat": "^2.6.1",
+        "gulp-cssnano": "^2.1.3",
         "gulp-imagemin": "^7.1.0",
         "gulp-line-ending-corrector": "^1.0.3",
+        "gulp-newer": "^1.4.0",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "^2.0.0",
         "gulp-sass": "^4.1.0",
-        "gulp-sourcemaps": "^2.6.5",
         "gulp-uglify-es": "^2.0.0"
     },
     "dependencies": {}

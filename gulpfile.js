@@ -1,27 +1,34 @@
 'use strict';
 
-const browsersync = require('browser-sync').create();
-const reload = browsersync.reload;
-const gulp = require('gulp');
-const autoprefixer = require('gulp-autoprefixer');
-const changed = require('gulp-changed');
-const cleanCss = require('gulp-clean-css');
-const concat = require('gulp-concat');
-const imagemin = require('gulp-imagemin');
-const lineec = require('gulp-line-ending-correct');
-const sass = require('gulp-sass');
-const sourcemaps = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify-es').default;
+const gulp = require('gulp'),
+    browsersync = require('browser-sync').create(),
+    del = require('del'),
+    autoprefixer = require('gulp-autoprefixer'),
+    concat = require('gulp-concat'),
+    cssnano = require('gulp-cssnano'),
+    imagemin = require('gulp-imagemin'),
+    lec = require('gulp-line-ending-corrector'),
+    newer = require('gulp-newer'),
+    plumber = require('gulp-plumber'),
+    rename = require('gulp-rename'),
+    sass = require('gulp-sass'),
+    uglify = require('gulp-uglify-es').default;
 
-async function message() {
-    return console.log('Gulp is running...');
-}
+const distributable = '' + 'dist' + '/',
+    imagesDist = distributable + 'images',
+    scriptsDist = distributable + 'scripts',
+    cssDist = distributable + 'css';
 
+const root = './' + 'src' + '/',
+    htmlSRC = root + '*.html',
+    imgSRC = root + 'images/**/*',
+    jsSRC = root + 'js/**/*.js',
+    scssSRC = root + 'scss/**/*.scss';
+
+// BrowserSync
 function browserSync(done) {
     browsersync.init({
-        server: {
-            baseDir: './dist/',
-        },
+        server: { baseDir: `${distributable}` },
         port: 3000,
     });
     done();
@@ -32,33 +39,62 @@ function browserSyncReload(done) {
     done();
 }
 
+// Clean assets
+function clean() {
+    return del([`${distributable}`]);
+}
+
 // Copy All HTML files
 function html() {
-    return gulp.src('src/*.html').pipe(gulp.dest('dist'));
+    return gulp.src(`${htmlSRC}`).pipe(gulp.dest(`${distributable}`));
 }
 
 // Optimise Images
 function images() {
-    return gulp.src('src/images/*').pipe(imagemin()).pipe(gulp.dest('dist/images'));
+    return gulp
+        .src(`${imgSRC}`)
+        .pipe(newer(`${imagesDist}`))
+        .pipe(imagemin())
+        .pipe(gulp.dest(`${imagesDist}`));
 }
 
 // Combine All Minify JS files
 function scripts() {
-    return gulp.src('src/js/*.js').pipe(concat('main.js')).pipe(uglify()).pipe(gulp.dest('dist/scripts'));
+    return gulp
+        .src(`${jsSRC}`)
+        .pipe(plumber())
+        .pipe(concat('main.js'))
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(`${scriptsDist}`))
+        .pipe(browsersync.stream());
 }
 
 // Compile Scss
-function scss() {
-    return gulp.src('src/scss/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist/css'));
+async function scss() {
+    return gulp
+        .src(`${scssSRC}`)
+        .pipe(plumber())
+        .pipe(sass({ outputStyle: 'expanded' }).on('error', sass.logError))
+        .pipe(autoprefixer())
+        .pipe(cssnano())
+        .pipe(lec())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(`${cssDist}`))
+        .pipe(browsersync.stream());
 }
 
 // Watch Files
 function watchFiles() {
-    gulp.watch('src/*.html', gulp.series(html, browserSyncReload));
-    gulp.watch('src/images/*', images);
-    gulp.watch('src/js/*.js', scripts);
-    gulp.watch('src/scss/*.scss', scss);
+    gulp.watch(`${htmlSRC}`, gulp.series(html, browserSyncReload));
+    gulp.watch(`${imgSRC}`, images);
+    gulp.watch(`${jsSRC}`, scripts);
+    gulp.watch(`${scssSRC}`, scss);
 }
 
-exports.build = gulp.series(message, gulp.parallel(html, images, scss, scripts));
-exports.default = gulp.parallel(watchFiles, browserSync);
+const build = gulp.series(clean, gulp.parallel(html, images, scss, scripts));
+const watch = gulp.parallel(watchFiles, browserSync);
+
+exports.build = build;
+exports.watch = watch;
+exports.default = gulp.series(build, watch);
