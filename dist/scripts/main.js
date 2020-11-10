@@ -1,0 +1,1 @@
+function subtraction(){console.log(4)}function sum(){console.log(5)}
