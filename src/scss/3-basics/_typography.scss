@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+html {
+    font-family: 'PT Sans', sans-serif;
+    line-height: 1.5;
+
+    @include breakPoint(tablet) {
+        font-size: $tabletFontSize;
+    }
+
+    @include breakPoint(laptop) {
+        font-size: $laptopFontSize;
+    }
+
+    @include breakPoint(main) {
+        font-size: $mainFontSize;
+    }
+
+    @include breakPoint(huge) {
+        font-size: $hugeFontSize;
+    }
+    @include breakPoint(phone) {
+        font-size: $phoneFontSize;
+    }
+}
+
+body,
+table,
+form,
+input,
+textarea,
+select,
+option {
+    font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: 0.5em;
+    font-weight: normal;
+    font-family: 'PT Serif', serif;
+}
+
+h1 {
+    font-size: 3em;
+}
+h2 {
+    font-size: 2.6em;
+}
+h3 {
+    font-size: 2em;
+}
+h4 {
+    font-size: 1.8em;
+}
+h5 {
+    font-size: 1.4em;
+}
+h6 {
+    font-size: 1em;
+}
+
+blockquote .author {
+    font-style: italic;
+    text-align: right;
+    opacity: 0.5;
+}
+
+blockquote .author::before {
+    display: inline-block;
+    content: '\2014';
+    padding-right: 0.5em;
+}

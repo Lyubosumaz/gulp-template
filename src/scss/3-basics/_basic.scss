@@ -1,0 +1,33 @@
+body,
+table,
+form,
+input,
+textarea,
+select,
+option {
+    background-color: $mainBackgroundColor;
+    color: $mainFontColor;
+}
+
+p,
+ul,
+ol {
+    padding-bottom: 1.5em;
+}
+
+ul,
+ol {
+    padding-left: 2em;
+}
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+ol > li > ol > li {
+    padding: 1rem;
+}
