@@ -12,6 +12,8 @@ const gulp = require('gulp'),
     plumber = require('gulp-plumber'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
+    ts = require("gulp-typescript"),
+    tsProject = ts.createProject("tsconfig.json"),
     uglify = require('gulp-uglify-es').default;
 
 const distributable = '' + 'dist' + '/',
