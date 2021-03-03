@@ -61,15 +61,28 @@ function images() {
 }
 
 // Combine All Minify JS files
+// function scripts() {
+//     return gulp
+//         .src(`${jsSRC}`)
+//         .pipe(plumber())
+//         .pipe(concat('main.js'))
+//         .pipe(uglify())
+//         .pipe(rename({ suffix: '.min' }))
+//         .pipe(gulp.dest(`${scriptsDist}`))
+//         .pipe(browsersync.stream());
+// }
+
 function scripts() {
-    return gulp
-        .src(`${jsSRC}`)
-        .pipe(plumber())
-        .pipe(concat('main.js'))
-        .pipe(uglify())
-        .pipe(rename({ suffix: '.min' }))
+    return tsProject
+        .src()
+        // './src/ts/**/*.ts'
+        .pipe(tsProject())
+        // .pipe(plumber())
+        // .pipe(concat('main.ts'))
+        // .pipe(uglify())
+        // .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(`${scriptsDist}`))
-        .pipe(browsersync.stream());
+        // .pipe(browsersync.stream());
 }
 
 // Compile Scss
