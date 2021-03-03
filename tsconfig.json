@@ -3,6 +3,7 @@
         "src/ts/main.ts"
     ],
     "compilerOptions": {
+        "isolatedModules": true,
         "noImplicitAny": true,
         "target": "es5"
     }

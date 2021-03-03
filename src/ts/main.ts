@@ -1,4 +1,4 @@
-function hello(compiler: string) {
-    console.log(`Hello from ${compiler} 22`);
+function hello(arg: string): void { } {
+    console.log(`Hello from 22 ${arg}`);
 }
 hello("TypeScript");

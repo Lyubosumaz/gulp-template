@@ -75,14 +75,13 @@ function images() {
 function scripts() {
     return tsProject
         .src()
-        // './src/ts/**/*.ts'
         .pipe(tsProject())
-        // .pipe(plumber())
-        // .pipe(concat('main.ts'))
-        // .pipe(uglify())
-        // .pipe(rename({ suffix: '.min' }))
+        .pipe(plumber())
+        .pipe(concat('main.js'))
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(`${scriptsDist}`))
-        // .pipe(browsersync.stream());
+        .pipe(browsersync.stream());
 }
 
 // Compile Scss
