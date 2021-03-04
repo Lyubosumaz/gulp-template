@@ -1,17 +1,10 @@
 {
-    "compilerOptions": {
-        "target": "es2015",
-        "module": "es2015",
-        "moduleResolution": "node",
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "esModuleInterop": true
-    },
-    "include": [
-        "src/typescript/**/*.ts"
+    "files": [
+        "src/typescript/main.ts",
+        "src/typescript/greet.ts"
     ],
-    "exclude": [
-        "node_modules"
-    ]
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es5"
+    }
 }

@@ -14,6 +14,9 @@ const gulp = require('gulp'),
     sass = require('gulp-sass'),
     ts = require("gulp-typescript"),
     tsProject = ts.createProject("tsconfig.json"),
+    browserify = require("browserify"),
+    source = require("vinyl-source-stream"),
+    tsify = require("tsify"),
     uglify = require('gulp-uglify-es').default;
 
 const distributable = '' + 'dist' + '/',
@@ -24,7 +27,7 @@ const distributable = '' + 'dist' + '/',
 const root = './' + 'src' + '/',
     htmlSRC = root + '*.html',
     imgSRC = root + 'images/**/*',
-    jsSRC = root + 'typescript/**/*.ts',
+    tsSRC = root + 'typescript/**/*.ts',
     scssSRC = root + 'scss/**/*.scss';
 
 // BrowserSync
@@ -73,16 +76,32 @@ function images() {
 // }
 
 function scripts() {
-    return tsProject
-        .src()
-        .pipe(tsProject())
-        .pipe(plumber())
-        .pipe(concat('main.js'))
-        // .pipe(uglify())
+    return browserify({
+        basedir: ".",
+        debug: true,
+        entries: ["src/typescript/main.ts"],
+        cache: {},
+        packageCache: {},
+    })
+        .plugin(tsify)
+        .bundle()
+        // .pipe(plumber())
+        .pipe(source("bundle.js"))
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(`${scriptsDist}`))
-        .pipe(browsersync.stream());
 }
+
+// function scripts() {
+//     return tsProject
+//         .src()
+//         .pipe(tsProject())
+//         .pipe(plumber())
+//         // .pipe(concat('main.js'))
+//         .pipe(uglify())
+//         .pipe(rename({ suffix: '.min' }))
+// .pipe(gulp.dest(`${scriptsDist}`))
+//         .pipe(browsersync.stream());
+// }
 
 // Compile Scss
 async function scss() {
@@ -102,7 +121,7 @@ async function scss() {
 function watchFiles() {
     gulp.watch(`${htmlSRC}`, gulp.series(html, browserSyncReload));
     gulp.watch(`${imgSRC}`, images);
-    gulp.watch(`${jsSRC}`, scripts);
+    gulp.watch(`${tsSRC}`, scripts);
     gulp.watch(`${scssSRC}`, scss);
 }
 
