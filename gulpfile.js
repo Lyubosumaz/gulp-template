@@ -19,7 +19,10 @@ const gulp = require('gulp'),
     watchify = require("watchify"),
     tsify = require("tsify"),
     fancy_log = require("fancy-log"),
-    uglify = require('gulp-uglify-es').default;
+    uglify = require("gulp-uglify"),
+    sourcemaps = require("gulp-sourcemaps"),
+    buffer = require("vinyl-buffer");
+// uglify = require('gulp-uglify-es').default;
 
 const distributable = '' + 'dist' + '/',
     imagesDist = distributable + 'images',
@@ -80,10 +83,12 @@ function scripts() {
     return watchedBrowserify
         .bundle()
         .on("error", fancy_log)
-        // .pipe(plumber())
         .pipe(source("bundle.js"))
         .pipe(rename({ suffix: '.min' }))
-        // .pipe(uglify())
+        .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(uglify())
+        .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(`${scriptsDist}`))
         .pipe(browsersync.stream());
 }
