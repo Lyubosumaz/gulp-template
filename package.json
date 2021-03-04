@@ -9,8 +9,6 @@
     "author": "Lyubosumaz",
     "license": "MIT",
     "devDependencies": {
-        "@types/gulp-typescript": "^2.13.0",
-        "@types/typescript": "^2.0.0",
         "browser-sync": "^2.26.14",
         "del": "^6.0.0",
         "gulp": "^4.0.2",

@@ -24,7 +24,7 @@ const distributable = '' + 'dist' + '/',
 const root = './' + 'src' + '/',
     htmlSRC = root + '*.html',
     imgSRC = root + 'images/**/*',
-    jsSRC = root + 'js/**/*.js',
+    jsSRC = root + 'typescript/**/*.ts',
     scssSRC = root + 'scss/**/*.scss';
 
 // BrowserSync
@@ -78,7 +78,7 @@ function scripts() {
         .pipe(tsProject())
         .pipe(plumber())
         .pipe(concat('main.js'))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(`${scriptsDist}`))
         .pipe(browsersync.stream());
