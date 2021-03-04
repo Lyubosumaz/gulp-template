@@ -16,7 +16,9 @@ const gulp = require('gulp'),
     tsProject = ts.createProject("tsconfig.json"),
     browserify = require("browserify"),
     source = require("vinyl-source-stream"),
+    watchify = require("watchify"),
     tsify = require("tsify"),
+    fancy_log = require("fancy-log"),
     uglify = require('gulp-uglify-es').default;
 
 const distributable = '' + 'dist' + '/',
@@ -63,45 +65,28 @@ function images() {
         .pipe(gulp.dest(`${imagesDist}`));
 }
 
-// Combine All Minify JS files
-// function scripts() {
-//     return gulp
-//         .src(`${jsSRC}`)
-//         .pipe(plumber())
-//         .pipe(concat('main.js'))
-//         .pipe(uglify())
-//         .pipe(rename({ suffix: '.min' }))
-//         .pipe(gulp.dest(`${scriptsDist}`))
-//         .pipe(browsersync.stream());
-// }
-
-function scripts() {
-    return browserify({
+// Combine All Minify TS files
+const watchedBrowserify = watchify(
+    browserify({
         basedir: ".",
         debug: true,
         entries: ["src/typescript/main.ts"],
         cache: {},
         packageCache: {},
-    })
-        .plugin(tsify)
+    }).plugin(tsify)
+);
+
+function scripts() {
+    return watchedBrowserify
         .bundle()
+        .on("error", fancy_log)
         // .pipe(plumber())
         .pipe(source("bundle.js"))
         .pipe(rename({ suffix: '.min' }))
+        // .pipe(uglify())
         .pipe(gulp.dest(`${scriptsDist}`))
+        .pipe(browsersync.stream());
 }
-
-// function scripts() {
-//     return tsProject
-//         .src()
-//         .pipe(tsProject())
-//         .pipe(plumber())
-//         // .pipe(concat('main.js'))
-//         .pipe(uglify())
-//         .pipe(rename({ suffix: '.min' }))
-// .pipe(gulp.dest(`${scriptsDist}`))
-//         .pipe(browsersync.stream());
-// }
 
 // Compile Scss
 async function scss() {
@@ -127,6 +112,8 @@ function watchFiles() {
 
 const build = gulp.series(clean, gulp.parallel(html, images, scss, scripts));
 const watch = gulp.parallel(watchFiles, browserSync);
+watchedBrowserify.on("update", scripts);
+watchedBrowserify.on("log", fancy_log);
 
 exports.build = build;
 exports.watch = watch;
