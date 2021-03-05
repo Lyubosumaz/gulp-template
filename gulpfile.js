@@ -4,7 +4,6 @@ const gulp = require('gulp'),
     browsersync = require('browser-sync').create(),
     del = require('del'),
     autoprefixer = require('gulp-autoprefixer'),
-    concat = require('gulp-concat'),
     cssnano = require('gulp-cssnano'),
     imagemin = require('gulp-imagemin'),
     lec = require('gulp-line-ending-corrector'),
@@ -12,8 +11,6 @@ const gulp = require('gulp'),
     plumber = require('gulp-plumber'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
-    ts = require("gulp-typescript"),
-    tsProject = ts.createProject("tsconfig.json"),
     browserify = require("browserify"),
     source = require("vinyl-source-stream"),
     watchify = require("watchify"),
@@ -22,7 +19,6 @@ const gulp = require('gulp'),
     uglify = require("gulp-uglify"),
     sourcemaps = require("gulp-sourcemaps"),
     buffer = require("vinyl-buffer");
-// uglify = require('gulp-uglify-es').default;
 
 const distributable = '' + 'dist' + '/',
     imagesDist = distributable + 'images',
@@ -81,6 +77,10 @@ const watchedBrowserify = watchify(
 
 function scripts() {
     return watchedBrowserify
+        .transform("babelify", {
+            presets: ["es2015"],
+            extensions: [".ts"],
+        })
         .bundle()
         .on("error", fancy_log)
         .pipe(source("bundle.js"))
