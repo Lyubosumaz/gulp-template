@@ -27,6 +27,7 @@ const distributable = '' + 'dist' + '/',
 
 const root = './' + 'src' + '/',
     htmlSRC = root + '*.html',
+    manifestSRC = root + '*.webmanifest',
     imgSRC = root + 'images/**/*',
     tsSRC = root + 'typescript/**/*.ts',
     scssSRC = root + 'scss/**/*.scss';
@@ -53,6 +54,11 @@ function clean() {
 // Copy All HTML files
 function html() {
     return gulp.src(`${htmlSRC}`).pipe(gulp.dest(`${distributable}`));
+}
+
+// Copy manifest for android devices
+function manifest() {
+    return gulp.src(`${manifestSRC}`).pipe(gulp.dest(`${distributable}`));
 }
 
 // Optimise Images
@@ -115,7 +121,7 @@ function watchFiles() {
     gulp.watch(`${scssSRC}`, scss);
 }
 
-const build = gulp.series(clean, gulp.parallel(html, images, scss, scripts));
+const build = gulp.series(clean, gulp.parallel(html, manifest, images, scss, scripts));
 const watch = gulp.parallel(watchFiles, browserSync);
 watchedBrowserify.on("update", scripts);
 watchedBrowserify.on("log", fancy_log);
